@@ -230,7 +230,7 @@ The brain doesn't just run once. It operates in an **iterative reasoning loop** 
 │  │  "I have the information. I can respond now."           │  │
 │  │                                                         │  │
 │  │  Step 5: RESPOND                                        │  │
-│  │  → "Your order #4521 has been shipped and will        │  │
+│  │  → "Your order #4521 has been shipped and will         │  │
 │  │     arrive by April 3rd."                               │  │
 │  │                                                         │  │
 │  └─────────────────────────────────────────────────────────┘  │

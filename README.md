@@ -27,12 +27,12 @@ n8n implements AI Agents through its **AI Agent node**, which is built on top of
 │                   n8n WORKFLOW                      │
 │                                                     │
 │  ┌──────────┐    ┌──────────┐    ┌──────────────┐   │
-│  │  Chat     │───▶│ AI Agent │───▶│  Output /    │   │
-│  │  Trigger  │    │  Node    │    │  Response     │   │
+│  │  Chat    │──▶│ AI Agent │───▶│  Output /    │   │
+│  │  Trigger │    │  Node    │    │  Response    │   │
 │  └──────────┘    └────┬─────┘    └──────────────┘   │
-│                       │                              │
-│              ┌────────┼────────┐                     │
-│              │        │        │                     │
+│                       │                             │
+│              ┌────────┼────────┐                    │
+│              │        │        │                    │
 │          ┌───▼──┐ ┌───▼──┐ ┌──▼───┐                 │
 │          │ LLM  │ │Tools │ │Memory│                 │
 │          │Model │ │      │ │      │                 │
@@ -175,25 +175,25 @@ The Perception layer is how the agent receives information about its environment
 
 ```
 ┌──────────────────────── PERCEPTION LAYER ───────────────────────┐
-│                                                                  │
-│   External World                                                 │
-│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
-│   │ User     │  │ Webhook  │  │ Email    │  │ Telegram │       │
-│   │ Chat     │  │ Request  │  │ Message  │  │ Message  │       │
-│   └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘       │
-│        │              │              │              │             │
-│        └──────────────┴──────┬───────┴──────────────┘             │
-│                              ▼                                    │
-│                    ┌─────────────────┐                            │
-│                    │  Input Parser   │                            │
-│                    │  (Normalize to  │                            │
-│                    │   text/JSON)    │                            │
-│                    └────────┬────────┘                            │
-│                             ▼                                    │
-│                    Structured Input                               │
-│                    to Brain Layer                                 │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
+│                                                                 │
+│   External World                                                │
+│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐        │
+│   │ User     │  │ Webhook  │  │ Email    │  │ Telegram │        │
+│   │ Chat     │  │ Request  │  │ Message  │  │ Message  │        │
+│   └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘        │
+│        │             │             │             │              │
+│        └─────────────┴──────┬──────┴─────────────┘              │
+│                             ▼                                   │
+│                    ┌─────────────────┐                          │
+│                    │  Input Parser   │                          │
+│                    │  (Normalize to  │                          │
+│                    │   text/JSON)    │                          │
+│                    └────────┬────────┘                          │
+│                             ▼                                   │
+│                    Structured Input                             │
+│                    to Brain Layer                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ### 3.2 Brain Layer (Reasoning + Planning)
@@ -206,45 +206,45 @@ The brain doesn't just run once. It operates in an **iterative reasoning loop** 
 
 ```
 ┌─────────────────── BRAIN LAYER (ReAct Loop) ──────────────────┐
-│                                                                 │
-│  ┌──────────┐                                                   │
-│  │  Input   │                                                   │
-│  │ (from    │                                                   │
-│  │ Percept.)│                                                   │
-│  └────┬─────┘                                                   │
-│       ▼                                                         │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │              REASONING ENGINE (LLM)                     │    │
-│  │                                                         │    │
-│  │  Step 1: THINK                                          │    │
-│  │  "The user wants to know their order status.            │    │
-│  │   I should use the Order Lookup tool."                  │    │
-│  │                                                         │    │
-│  │  Step 2: ACT                                            │    │
-│  │  → Call tool: order_lookup(order_id="4521")             │    │
-│  │                                                         │    │
-│  │  Step 3: OBSERVE                                        │    │
-│  │  ← Tool returns: { status: "shipped", eta: "Apr 3" }   │    │
-│  │                                                         │    │
-│  │  Step 4: THINK (again)                                  │    │
-│  │  "I have the information. I can respond now."           │    │
-│  │                                                         │    │
-│  │  Step 5: RESPOND                                        │    │
-│  │  → "Your order #4521 has been shipped and will          │    │
-│  │     arrive by April 3rd."                               │    │
-│  │                                                         │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                 │
-│  Components:                                                    │
-│  ┌───────────┐  ┌────────────┐  ┌────────────┐                 │
-│  │  System   │  │  Chat      │  │  Tool      │                 │
-│  │  Prompt   │  │  History   │  │  Descrip-  │                 │
-│  │  (persona │  │  (from     │  │  tions     │                 │
-│  │  + rules) │  │  memory)   │  │  (what's   │                 │
-│  │           │  │            │  │  available)│                 │
-│  └───────────┘  └────────────┘  └────────────┘                 │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+│                                                               │
+│  ┌──────────┐                                                 │
+│  │  Input   │                                                 │
+│  │ (from    │                                                 │
+│  │ Percept.)│                                                 │
+│  └────┬─────┘                                                 │
+│       ▼                                                       │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │              REASONING ENGINE (LLM)                     │  │
+│  │                                                         │  │
+│  │  Step 1: THINK                                          │  │
+│  │  "The user wants to know their order status.            │  │
+│  │   I should use the Order Lookup tool."                  │  │
+│  │                                                         │  │
+│  │  Step 2: ACT                                            │  │
+│  │  → Call tool: order_lookup(order_id="4521")             │  │
+│  │                                                         │  │
+│  │  Step 3: OBSERVE                                        │  │
+│  │  ← Tool returns: { status: "shipped", eta: "Apr 3" }    │  │
+│  │                                                         │  │
+│  │  Step 4: THINK (again)                                  │  │
+│  │  "I have the information. I can respond now."           │  │
+│  │                                                         │  │
+│  │  Step 5: RESPOND                                        │  │
+│  │  → "Your order #4521 has been shipped and will        │  │
+│  │     arrive by April 3rd."                               │  │
+│  │                                                         │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                               │
+│  Components:                                                  │
+│  ┌───────────┐  ┌────────────┐  ┌────────────┐                │
+│  │  System   │  │  Chat      │  │  Tool      │                │
+│  │  Prompt   │  │  History   │  │  Descrip-  │                │
+│  │  (persona │  │  (from     │  │  tions     │                │
+│  │  + rules) │  │  memory)   │  │  (what's   │                │
+│  │           │  │            │  │  available)│                │
+│  └───────────┘  └────────────┘  └────────────┘                │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
 ```
 
 #### Key Brain Components in n8n
@@ -284,37 +284,37 @@ The Action layer is where the agent **does things** in the real world. In n8n, a
 ┌────────────────────────────────────────────────────────────────────┐
 │                    n8n AI AGENT — FULL ARCHITECTURE                │
 │                                                                    │
-│  ┌──────────── PERCEPTION ────────────┐                           │
-│  │  Chat Trigger / Webhook / Email    │                           │
-│  │  Telegram / Slack / Schedule       │                           │
-│  └──────────────┬─────────────────────┘                           │
+│  ┌──────────── PERCEPTION ────────────┐                            │
+│  │  Chat Trigger / Webhook / Email    │                            │
+│  │  Telegram / Slack / Schedule       │                            │
+│  └──────────────┬─────────────────────┘                            │
 │                 ▼                                                  │
-│  ┌──────────── BRAIN ─────────────────────────────────────────┐   │
-│  │                                                             │   │
-│  │  ┌─────────────────────────────────────────────────────┐   │   │
-│  │  │              AI AGENT NODE                          │   │   │
-│  │  │                                                     │   │   │
-│  │  │  System Prompt ──▶ LLM (GPT-4o / Gemini / Claude) │   │   │
-│  │  │                        │                            │   │   │
-│  │  │                   ┌────┴────┐                       │   │   │
-│  │  │                   │ ReAct   │                       │   │   │
-│  │  │                   │ Loop    │◀── Memory (context)   │   │   │
-│  │  │                   │ Think → │                       │   │   │
-│  │  │                   │ Act →   │                       │   │   │
-│  │  │                   │ Observe │                       │   │   │
-│  │  │                   └────┬────┘                       │   │   │
-│  │  └────────────────────────┼────────────────────────────┘   │   │
-│  └───────────────────────────┼────────────────────────────────┘   │
-│                              ▼                                    │
-│  ┌──────────── ACTION ────────────────────────────────────────┐   │
-│  │                                                             │   │
-│  │  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐   │   │
-│  │  │ HTTP   │ │ Google │ │ Slack  │ │ Code   │ │ Vector │   │   │
-│  │  │Request │ │ Sheets │ │  Post  │ │  Exec  │ │ Store  │   │   │
-│  │  │ Tool   │ │ Tool   │ │  Tool  │ │  Tool  │ │ Query  │   │   │
-│  │  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘   │   │
-│  │                                                             │   │
-│  └─────────────────────────────────────────────────────────────┘   │
+│  ┌──────────── BRAIN ─────────────────────────────────────────┐    │
+│  │                                                            │    │
+│  │  ┌─────────────────────────────────────────────────────┐   │    │
+│  │  │              AI AGENT NODE                          │   │    │
+│  │  │                                                     │   │    │
+│  │  │  System Prompt ──▶ LLM (GPT-4o / Gemini / Claude)  │   │    │
+│  │  │                        │                            │   │    │
+│  │  │                   ┌────┴────┐                       │   │    │
+│  │  │                   │ ReAct   │                       │   │    │
+│  │  │                   │ Loop    │◀── Memory (context)  │   │    │
+│  │  │                   │ Think → │                       │   │    │
+│  │  │                   │ Act →   │                       │   │    │
+│  │  │                   │ Observe │                       │   │    │
+│  │  │                   └────┬────┘                       │   │    │
+│  │  └────────────────────────┼────────────────────────────┘   │    │
+│  └───────────────────────────┼────────────────────────────────┘    │
+│                              ▼                                     │
+│  ┌──────────── ACTION ────────────────────────────────────────┐    │
+│  │                                                            │    │
+│  │  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐    │    │
+│  │  │ HTTP   │ │ Google │ │ Slack  │ │ Code   │ │ Vector │    │    │
+│  │  │Request │ │ Sheets │ │  Post  │ │  Exec  │ │ Store  │    │    │
+│  │  │ Tool   │ │ Tool   │ │  Tool  │ │  Tool  │ │ Query  │    │    │
+│  │  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘    │    │
+│  │                                                            │    │
+│  └────────────────────────────────────────────────────────────┘    │
 │                                                                    │
 └────────────────────────────────────────────────────────────────────┘
 ```
@@ -424,14 +424,14 @@ A goal-based agent doesn't just react — it has an explicit **goal** and plans 
         └──────┬───────┘
                │ percept
                ▼
-        ┌──────────────┐     ┌──────────┐
+        ┌──────────────┐      ┌──────────┐
         │  Planning    │◀───▶│  GOAL    │
-        │  Engine      │     │          │
-        │  (What       │     │ "Resolve │
-        │   sequence   │     │  the     │
-        │   of actions │     │  ticket" │
-        │   achieves   │     │          │
-        │   the goal?) │     └──────────┘
+        │  Engine      │      │          │
+        │  (What       │      │ "Resolve │
+        │   sequence   │      │  the     │
+        │   of actions │      │  ticket" │
+        │   achieves   │      │          │
+        │   the goal?) │      └──────────┘
         └──────┬───────┘
                │ planned action sequence
                ▼
@@ -477,16 +477,16 @@ A utility-based agent goes beyond goals — it assigns a **utility score** (a me
         └──────┬───────┘
                │ percept
                ▼
-        ┌──────────────┐     ┌──────────────┐
+        ┌──────────────┐      ┌──────────────┐
         │  Utility     │◀───▶│  Utility     │
-        │  Calculator  │     │  Function    │
-        │              │     │              │
-        │  "Which      │     │  Score =     │
-        │   action     │     │  f(speed,    │
-        │   produces   │     │    cost,     │
-        │   the best   │     │    quality)  │
-        │   outcome?"  │     │              │
-        └──────┬───────┘     └──────────────┘
+        │  Calculator  │      │  Function    │
+        │              │      │              │
+        │  "Which      │      │  Score =     │
+        │   action     │      │  f(speed,    │
+        │   produces   │      │    cost,     │
+        │   the best   │      │    quality)  │
+        │   outcome?"  │      │              │
+        └──────┬───────┘      └──────────────┘
                │ optimal action
                ▼
         ┌──────────────┐
@@ -526,21 +526,21 @@ A learning agent improves its performance over time based on feedback. It has fo
 ┌─────────────────────────────────────────────────────────┐
 │                    LEARNING AGENT                       │
 │                                                         │
-│   ┌────────────┐        ┌────────────┐                 │
+│   ┌────────────┐         ┌────────────┐                 │
 │   │  Critic    │◀──────▶│  Learning  │                 │
-│   │  (feedback │        │  Element   │                 │
-│   │  evaluator)│        │  (improves │                 │
-│   └────────────┘        │  behavior) │                 │
-│                         └─────┬──────┘                 │
+│   │  (feedback │         │  Element   │                 │
+│   │  evaluator)│         │  (improves │                 │
+│   └────────────┘         │  behavior) │                 │
+│                          └─────┬──────┘                 │
 │                               │                         │
 │                               ▼                         │
-│   ┌────────────┐        ┌────────────┐                 │
+│   ┌────────────┐         ┌────────────┐                 │
 │   │  Problem   │◀──────▶│ Performance│                 │
-│   │  Generator │        │  Element   │                 │
-│   │  (explores │        │  (selects  │                 │
-│   │  new       │        │  actions)  │                 │
-│   │  scenarios)│        │            │                 │
-│   └────────────┘        └────────────┘                 │
+│   │  Generator │         │  Element   │                 │
+│   │  (explores │         │  (selects  │                 │
+│   │  new       │         │  actions)  │                 │
+│   │  scenarios)│         │            │                 │
+│   └────────────┘         └────────────┘                 │
 │                                                         │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -591,48 +591,48 @@ Memory is what transforms a stateless LLM call into a contextual, conversational
 
 ```
 ┌────────────────────── MEMORY IN n8n AI AGENTS ──────────────────────┐
-│                                                                      │
+│                                                                     │
 │  ┌────────────────── SHORT-TERM MEMORY ──────────────────┐          │
-│  │                                                        │          │
-│  │  Simple Memory              Window Buffer Memory       │          │
-│  │  (In-process RAM)           (Last N messages)          │          │
-│  │                                                        │          │
-│  │  • Per-execution only       • Sliding window           │          │
-│  │  • Lost on restart          • Configurable size         │          │
-│  │  • Great for dev/testing    • Balances context & cost   │          │
-│  │                                                        │          │
-│  └────────────────────────────────────────────────────────┘          │
-│                                                                      │
+│  │                                                       │          │
+│  │  Simple Memory              Window Buffer Memory      │          │
+│  │  (In-process RAM)           (Last N messages)         │          │
+│  │                                                       │          │
+│  │  • Per-execution only       • Sliding window          │          │
+│  │  • Lost on restart          • Configurable size       │          │
+│  │  • Great for dev/testing    • Balances context & cost │          │
+│  │                                                       │          │
+│  └───────────────────────────────────────────────────────┘          │
+│                                                                     │
 │  ┌────────────────── LONG-TERM MEMORY ───────────────────┐          │
-│  │                                                        │          │
-│  │  Postgres Chat Memory       Redis Chat Memory          │          │
-│  │  (Database-backed)          (Cache-backed)             │          │
-│  │                                                        │          │
-│  │  • Persists across          • Ultra-fast read/write    │          │
-│  │    restarts                 • Great for real-time      │          │
-│  │  • Per-user sessions        • Also persists across     │          │
-│  │  • Production-ready           restarts                 │          │
-│  │                                                        │          │
-│  │  MongoDB Chat Memory        Motorhead Memory           │          │
-│  │  (Document store)           (Managed service)          │          │
-│  │                                                        │          │
-│  │  • Flexible schema          • Cloud-hosted             │          │
-│  │  • Complex data             • Built-in management      │          │
-│  │                                                        │          │
-│  └────────────────────────────────────────────────────────┘          │
-│                                                                      │
+│  │                                                       │          │
+│  │  Postgres Chat Memory       Redis Chat Memory         │          │
+│  │  (Database-backed)          (Cache-backed)            │          │
+│  │                                                       │          │
+│  │  • Persists across          • Ultra-fast read/write   │          │
+│  │    restarts                 • Great for real-time     │          │
+│  │  • Per-user sessions        • Also persists across    │          │
+│  │  • Production-ready           restarts                │          │
+│  │                                                       │          │
+│  │  MongoDB Chat Memory        Motorhead Memory          │          │
+│  │  (Document store)           (Managed service)         │          │
+│  │                                                       │          │
+│  │  • Flexible schema          • Cloud-hosted            │          │
+│  │  • Complex data             • Built-in management     │          │
+│  │                                                       │          │
+│  └───────────────────────────────────────────────────────┘          │
+│                                                                     │
 │  ┌────────────────── EXTERNAL KNOWLEDGE (RAG) ───────────┐          │
-│  │                                                        │          │
-│  │  Vector Store + Embeddings                             │          │
+│  │                                                       │          │
+│  │  Vector Store + Embeddings                            │          │
 │  │  (Pinecone, Qdrant, Supabase, In-Memory)              │          │
-│  │                                                        │          │
-│  │  • Searchable knowledge base                           │          │
-│  │  • Documents, FAQs, past conversations                 │          │
-│  │  • Not "memory" per se, but extends agent knowledge    │          │
-│  │                                                        │          │
-│  └────────────────────────────────────────────────────────┘          │
-│                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
+│  │                                                       │          │
+│  │  • Searchable knowledge base                          │          │
+│  │  • Documents, FAQs, past conversations                │          │
+│  │  • Not "memory" per se, but extends agent knowledge   │          │
+│  │                                                       │          │
+│  └───────────────────────────────────────────────────────┘          │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 5.2 Short-Term Memory
@@ -847,14 +847,14 @@ Start
 │  AGENT = Trigger + Brain + Tools + Memory                │
 │                                                          │
 │  TRIGGER:  Chat Trigger, Webhook, Email, Cron            │
-│  BRAIN:    AI Agent Node + LLM (GPT-4o, Gemini, etc.)   │
+│  BRAIN:    AI Agent Node + LLM (GPT-4o, Gemini, etc.)    │
 │  TOOLS:    HTTP Request, Code, Search, Sheets, Slack...  │
 │  MEMORY:   Simple | Postgres | Redis | MongoDB           │
 │                                                          │
 │  AGENT vs AUTOMATION:                                    │
-│  • Automation = fixed paths, deterministic                │
+│  • Automation = fixed paths, deterministic               │
 │  • Agent = dynamic decisions, LLM-driven                 │
-│  • Best approach = hybrid (both together)                 │
+│  • Best approach = hybrid (both together)                │
 │                                                          │
 │  ARCHITECTURE:                                           │
 │  • Perception → Brain (ReAct loop) → Action              │
@@ -862,7 +862,7 @@ Start
 │  MEMORY RULE OF THUMB:                                   │
 │  • Dev → Simple Memory                                   │
 │  • Prod → Postgres (most cases) or Redis (real-time)     │
-│  • Knowledge → Add RAG with Vector Store                  │
+│  • Knowledge → Add RAG with Vector Store                 │
 │                                                          │
 │  KEY VERSION NOTE:                                       │
 │  Since n8n v1.82.0, all AI Agent nodes work as           │
@@ -872,6 +872,3 @@ Start
 └──────────────────────────────────────────────────────────┘
 ```
 
----
-
-*This guide is based on n8n's official documentation, LangChain agent concepts, and the AI agent taxonomy from "Artificial Intelligence: A Modern Approach" (AIMA). For the latest updates, refer to the [n8n AI documentation](https://docs.n8n.io/advanced-ai/) and the [n8n blog](https://blog.n8n.io/ai-agents/).*

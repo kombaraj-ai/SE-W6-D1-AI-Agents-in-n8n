@@ -1,4 +1,4 @@
-# n8n AI Agents — The Complete Documentation Guide
+# Week 6 -> Day 1 -> AI Agents in n8n
 
 ---
 
